@@ -108,7 +108,6 @@ class _SimpleCropRouteState extends State<SimpleCropRoute> {
                 'Current screenshot：',
                 style: TextStyle(
                     fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w300,
                     color: Theme.of(context).primaryColor,
                     letterSpacing: 1.1),
               ),
