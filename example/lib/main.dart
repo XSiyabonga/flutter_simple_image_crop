@@ -135,17 +135,19 @@ class _SimpleCropRouteState extends State<SimpleCropRoute> {
         body: Center(
           child: ImgCrop(
             key: cropKey,
-            // chipRadius: 100,
-            // chipShape: 'rect',
+            chipRadius: 100,
+            chipShape: ChipShape.rect,
+            chipRatio: 2 / 1,
             maximumScale: 3,
             image: FileImage(args['image']),
+            // handleSize: 0.0,
           ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             final crop = cropKey.currentState;
             final croppedFile =
-                await crop.cropCompleted(args['image'], pictureQuality: 600);
+                await crop.cropCompleted(args['image'], preferredSize: 1000);
             showImage(context, croppedFile);
           },
           tooltip: 'Increment',

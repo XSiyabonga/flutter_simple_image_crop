@@ -4,21 +4,21 @@ description: Demonstrates how to use the image_crop plugin.
 version: 1.0.0+1
 
 environment:
-    sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
-    flutter:
-        sdk: flutter
+  flutter:
+    sdk: flutter
 
-    cupertino_icons: ^0.1.2
-    image_picker: ^0.4.10
+  cupertino_icons: ^0.1.2
+  image_picker: ^0.4.10
 
 dev_dependencies:
-    flutter_test:
-        sdk: flutter
+  flutter_test:
+    sdk: flutter
 
-    simple_image_crop:
-        path: ../
+  simple_image_crop:
+    path: ../
 
 flutter:
-    uses-material-design: true
+  uses-material-design: true
