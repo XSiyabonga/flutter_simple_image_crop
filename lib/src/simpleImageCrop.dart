@@ -4,7 +4,7 @@ class ImageOptions {
   final int width;
   final int height;
 
-  ImageOptions({this.width, this.height})
+  ImageOptions({required this.width, required this.height})
       : assert(width != null),
         assert(height != null);
 
@@ -34,7 +34,7 @@ class ImageCrop {
         .then<bool>((result) => result);
   }
 
-  static Future<ImageOptions> getImageOptions({File file}) async {
+  static Future<ImageOptions> getImageOptions({required File file}) async {
     assert(file != null);
     final result =
         await _channel.invokeMethod('getImageOptions', {'path': file.path});
@@ -45,9 +45,9 @@ class ImageCrop {
   }
 
   static Future<File> cropImage({
-    File file,
-    Rect area,
-    double scale,
+    required File file,
+    required Rect area,
+    double? scale,
   }) {
     assert(file != null);
     assert(area != null);
@@ -62,25 +62,16 @@ class ImageCrop {
   }
 
   static Future<File> sampleImage({
-    File file,
-    int preferredSize,
-    int preferredWidth,
-    int preferredHeight,
+    required File file,
+    required int preferredWidth,
+    required int preferredHeight,
   }) async {
-    assert(file != null);
-    assert(() {
-      if (preferredSize == null &&
-          (preferredWidth == null || preferredHeight == null)) {
-        throw ArgumentError(
-            'Preferred size or both width and height of a resampled image must be specified.');
-      }
-      return true;
-    }());
-    final String path = await _channel.invokeMethod('sampleImage', {
+
+    final String path = await (_channel.invokeMethod('sampleImage', {
       'path': file.path,
-      'maximumWidth': preferredSize ?? preferredWidth,
-      'maximumHeight': preferredSize ?? preferredHeight,
-    });
+      'maximumWidth': preferredWidth,
+      'maximumHeight': preferredHeight,
+    }) as FutureOr<String>);
     return File(path);
   }
 }
