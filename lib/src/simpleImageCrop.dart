@@ -71,7 +71,7 @@ class ImageCrop {
       'path': file.path,
       'maximumWidth': preferredWidth,
       'maximumHeight': preferredHeight,
-    }) as FutureOr<String>);
+    }));
     return File(path);
   }
 }

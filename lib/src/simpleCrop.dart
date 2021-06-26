@@ -48,7 +48,6 @@ class ImgCrop extends StatefulWidget {
       this.handleSize = 10.0,
       required this.borderColor})
       : image = FileImage(file, scale: scale),
-        assert(maximumScale != null),
         super(key: key);
 
   ImgCrop.asset(String assetName,
@@ -63,7 +62,6 @@ class ImgCrop extends StatefulWidget {
       this.handleSize = 10.0,
       required this.borderColor})
       : image = AssetImage(assetName, bundle: bundle, package: package),
-        assert(maximumScale != null),
         super(key: key);
 
   @override
@@ -190,7 +188,7 @@ class ImgCropState extends State<ImgCrop> with TickerProviderStateMixin, Drag {
         child: CustomPaint(
           painter: _CropPainter(
               borderColor: widget.borderColor,
-            image: _image!,
+            image: _image,
             ratio: _ratio,
             view: _view,
             area: _area,
@@ -386,7 +384,7 @@ class ImgCropState extends State<ImgCrop> with TickerProviderStateMixin, Drag {
 }
 
 class _CropPainter extends CustomPainter {
-  final ui.Image image;
+  final ui.Image? image;
   final Rect? view;
   final double? ratio;
   final Rect? area;
@@ -397,7 +395,7 @@ class _CropPainter extends CustomPainter {
   Color borderColor = Colors.white;
 
   _CropPainter(
-      {required this.image,
+      {this.image,
       this.view,
       this.ratio,
       this.area,
@@ -449,19 +447,19 @@ class _CropPainter extends CustomPainter {
       final src = Rect.fromLTWH(
         0.0,
         0.0,
-        image.width.toDouble(),
-        image.height.toDouble(),
+        image!.width.toDouble(),
+        image!.height.toDouble(),
       );
       final dst = Rect.fromLTWH(
-        view!.left * image.width * scale! * ratio!,
-        view!.top * image.height * scale! * ratio!,
-        image.width * scale! * ratio!,
-        image.height * scale! * ratio!,
+        view!.left * image!.width * scale! * ratio!,
+        view!.top * image!.height * scale! * ratio!,
+        image!.width * scale! * ratio!,
+        image!.height * scale! * ratio!,
       );
 
       canvas.save();
       canvas.clipRect(Rect.fromLTWH(0.0, 0.0, rect.width, rect.height));
-      canvas.drawImageRect(image, src, dst, paint);
+      canvas.drawImageRect(image!, src, dst, paint);
       canvas.restore();
     }
 
@@ -476,7 +474,12 @@ class _CropPainter extends CustomPainter {
       ..addRect(Rect.fromLTRB(0.0, 0.0, rect.width, rect.height));
     Path _path2;
     if (chipShape == ChipShape.rect) {
-      _path2 = Path()..addRect(boundaries);
+      _path2 = Path()..addRRect(RRect.fromLTRBR(
+          boundaries.left,
+          boundaries.top,
+          boundaries.right,
+          boundaries.bottom,
+          Radius.circular(20)));
     } else {
       _path2 = Path()
         ..addRRect(RRect.fromLTRBR(
@@ -495,9 +498,9 @@ class _CropPainter extends CustomPainter {
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
     if (chipShape == ChipShape.rect) {
-      canvas.drawRect(
-          Rect.fromLTRB(boundaries.left - 1, boundaries.top - 1,
-              boundaries.right + 1, boundaries.bottom + 1),
+      canvas.drawRRect(
+          RRect.fromLTRBR(boundaries.left - 1, boundaries.top - 1,
+              boundaries.right + 1, boundaries.bottom + 1,Radius.circular(10)),
           paint);
     } else {
       canvas.drawRRect(
@@ -509,7 +512,6 @@ class _CropPainter extends CustomPainter {
               Radius.circular(boundaries.height / 2)),
           paint);
     }
-
     canvas.restore();
   }
 }
